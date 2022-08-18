@@ -1,6 +1,6 @@
 import { FETCH_BALHISTORY } from "../actions/types";
 
-const initialState = "no balance history"
+const initialState = "Loading..."
 const balanceHistoryReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_BALHISTORY:

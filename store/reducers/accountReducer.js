@@ -1,10 +1,10 @@
 import { FETCH_ACCOUNT } from "../actions/types";
 
-const initialState = "no account"
+const initialState = null;
 const accountReducer = (state = initialState, action) => {
   switch (action.type) {
     case FETCH_ACCOUNT:
-      return action.payload  
+      return action.payload || state 
     default:
       return state;
   }
