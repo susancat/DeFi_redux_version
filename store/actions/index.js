@@ -1,5 +1,7 @@
 import { FETCH_ACCOUNT, FETCH_BALANCE, FETCH_BALHISTORY} from "./types";
 import { fetchAccount, connectAccount, fetchBalance, connectForBalance, postBalanceHistory } from "../../connection/index";
+import axios from 'axios';
+
 //fetch data here, if fetch from server-side, use axios
 export const getAccount = () => async (dispatch) => {
   const account = await fetchAccount();
@@ -50,11 +52,16 @@ export const grabBalance = () => async (dispatch) => {
 };
 //cause post and fetch balance history will interact with the same api, they can use same type
 export const postBalHistory = () => async (dispatch) => {
+  const account = await fetchAccount();
   const balanceRecord = await postBalanceHistory();
+  const res = await axios.post('/api/records/', { 
+    account,
+    balances: balanceRecord
+  })
   try {
     dispatch({
       type: FETCH_BALHISTORY,
-      payload: balanceRecord,
+      payload: res.data,
     });
   } catch (err) {
       console.log(err)
@@ -62,10 +69,18 @@ export const postBalHistory = () => async (dispatch) => {
 };
 
 export const fetchBalHistory = () => async (dispatch) => {
+  const account = await fetchAccount();
+  const res = await axios.get('/api/records/', { 
+    params:
+    { 
+      account
+    }
+  })
+  // console.log(res.data)
   try {
     dispatch({
       type: FETCH_BALHISTORY,
-      payload: "10000:11.345",
+      payload: res.data.balances
     });
   } catch (err) {
       console.log(err)

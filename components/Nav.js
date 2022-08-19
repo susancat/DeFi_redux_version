@@ -1,16 +1,16 @@
+import { useState } from "react";
 import { Button, ButtonGroup, Container, Navbar } from 'react-bootstrap';
 import { useDispatch, useSelector } from "react-redux";
 import { grabAccount, grabBalance, postBalHistory } from '../store/actions';
+import AccountDetails from './accountDetails';
 
-const Nav = (props) => {
-    const dispatch = useDispatch();
-  const accountData = useSelector((state) => state.accountState);
-  const balanceData = useSelector((state) => state.balanceState);
-  const balanceHistory = useSelector((state) => state.balHisState);
-
-  const account = accountData;
-  const balance = balanceData;
-  const balHistory = balanceHistory;
+const Nav = () => {
+  const [modalShow, setModalShow] = useState(false);
+  
+  const dispatch = useDispatch();
+  const account = useSelector((state) => state.accountState);
+  const balance = useSelector((state) => state.balanceState);
+  const balHistory = useSelector((state) => state.balHisState);
 
   const connect = async() => {
     await dispatch(grabAccount());
@@ -42,16 +42,11 @@ const Nav = (props) => {
             </Navbar.Collapse>
           </Container>
         </Navbar>
-        {/* <Transfer 
-          account={account} 
-          balance={balance} 
-          web3={web3} 
-          getBalance={(balance) => setBalance(balance)} />
         <AccountDetails 
           account={account}
           show={modalShow} 
           onHide={() => setModalShow(false)} 
-        /> */}
+        />
         </>
       );
     }

@@ -17,7 +17,7 @@ export const connectionChanges = async() => {
     }
 }
 
-const fetchWeb3 = async() => {
+export const fetchWeb3 = async() => {
   if(!window.ethereum) throw new Error("No crypto wallet found!");
   let provider;
     if (window.ethereum) {
@@ -72,7 +72,7 @@ export const postBalanceHistory = async() => {
             console.log(err)
           } else {
             balance = parseFloat(web3.utils.fromWei(String(balance), 'ether')).toFixed(5);
-            let value = `${displayBlock} : ${balance}`;
+            let value = `Block: ${displayBlock} : ${balance}`;
             balanceRecord.push(value);
           }
         })
