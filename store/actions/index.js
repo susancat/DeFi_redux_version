@@ -1,5 +1,5 @@
 import { FETCH_ACCOUNT, FETCH_BALANCE, FETCH_BALHISTORY} from "./types";
-import { fetchAccount, connectAccount, fetchBalance, connectForBalance, postBalanceHistory } from "../../connection/index";
+import { fetchAccount, connectAccount, disconnect, fetchBalance, connectForBalance, postBalanceHistory } from "../../connection/index";
 import axios from 'axios';
 
 //fetch data here, if fetch from server-side, use axios
@@ -26,6 +26,18 @@ export const grabAccount = () => async (dispatch) => {
       console.log(err)
   }
 };
+
+export const disconnectAccount = () => async (dispatch) => {
+  await disconnect();
+  try {
+    dispatch({
+      type: FETCH_ACCOUNT,
+      payload: null,
+    });
+  } catch (err) {
+      console.log(err)
+  }
+}
 
 export const getBalance = () => async (dispatch) => {
   const balance = await fetchBalance();

@@ -16,6 +16,7 @@ function Transfer() {
     const account = useSelector((state) => state.accountState);
     const balance = useSelector((state) => state.balanceState);
     useEffect(() => {
+        dispatch(getAccount());
         dispatch(getBalance());
     }, [dispatch]);
 

@@ -1,7 +1,7 @@
 import {Button, Col, Container, Modal, Row} from 'react-bootstrap';
 import { useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
-import { fetchBalHistory } from '../store/actions';
+import { fetchBalHistory, disconnectAccount } from '../store/actions';
 
 export default function AccountDetails(props) {
   const [balanceRecord, setBalanceRecord] = useState([]);
@@ -34,7 +34,7 @@ export default function AccountDetails(props) {
                     <h5 className='mt-2 text-dark'>Connected with Metamask</h5>
                 </Col>
                 <Col xs={6} md={4}>
-                <Button variant='outline-danger'>Disconnect</Button>
+                <Button variant='outline-danger' onClick={disconnectAccount}>Disconnect</Button>
                 </Col>
             </Row>
         </Container>

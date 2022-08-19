@@ -83,67 +83,56 @@ export const postBalanceHistory = async() => {
   }
 }
 
-const switchNetwork = async(web3) => {
-    if (window.ethereum) {
-        try {
-          await window.ethereum.request({
-            method: 'wallet_switchEthereumChain',
-            params: [{ chainId: Web3.utils.toHex(4) }], // chainId must be in hexadecimal numbers
-          })
-          .then (async() => {
-            fetchAccount(web3);
-            fetchBalance(web3);
-            postBalanceHistory(web3);
-            }).catch(err => {
-              console.log(err);
-            }
-          );
-        } catch (error) {
-          if (error.code === 4902) {
-            try {
-              await window.ethereum.request({
-                method: 'wallet_addEthereumChain',
-                params: [
-                  {
-                    chainId: '4',
-                    rpcUrl: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
-                  },
-                ],
-              });
-            } catch (addError) {
-              console.error(addError);
-            }
+export const switchNetwork = async() => {
+  if (window.ethereum) {
+      try {
+        await window.ethereum.request({
+          method: 'wallet_switchEthereumChain',
+          params: [{ chainId: Web3.utils.toHex(4) }], // chainId must be in hexadecimal numbers
+        })
+        .then (async() => {
+          fetchAccount();
+          fetchBalance();
+          postBalanceHistory();
+          }).catch(err => {
+            console.log(err);
           }
-          console.error(error);
+        );
+      } catch (error) {
+        if (error.code === 4902) {
+          try {
+            await window.ethereum.request({
+              method: 'wallet_addEthereumChain',
+              params: [
+                {
+                  chainId: '4',
+                  rpcUrl: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+                },
+              ],
+            });
+          } catch (addError) {
+            console.error(addError);
+          }
         }
-      } else {
-        // if no window.ethereum then MetaMask is not installed
-        alert('MetaMask is not installed. Please consider installing it: https://metamask.io/download.html');
-      } 
+        console.error(error);
+      }
+    } else {
+      // if no window.ethereum then MetaMask is not installed
+      alert('MetaMask is not installed. Please consider installing it: https://metamask.io/download.html');
+    } 
 }
 
-//start a connection to the web3 provider positively
-export const connect = async() => {
-  if(!window.ethereum) throw new Error("No crypto wallet found!");
-  try{
-      const web3 = await fetchWeb3();
-      const chainId = await fetchChainId();   
-      if (chainId !== 4) {
-          switchNetwork(web3);
-      }
-      fetchAccount(web3);
-      fetchBalance(web3);
-      postBalanceHistory(web3); 
-      window.ethereum.on("accountsChanged", (accounts) => {
-          fetchAccount(web3);
-          fetchBalance(web3);
-          postBalanceHistory(web3); 
-      });
-  } catch(err){
+export const disconnect = async() => {
+  try {
+      const web3Modal = await getWeb3Modal();
+      await web3Modal.clearCachedProvider();
+      // window.ethereum.on('disconnect',setAccount(null));              
+  } catch (err) {
       console.log(err)
   }
 }
 
+//start a connection to the web3 provider positively
 const getWeb3Modal = async() => {
   const providerOptions = {
       //for wallet other than metamask only but required
