@@ -1,19 +1,31 @@
 import {Button, Col, Container, Modal, Row} from 'react-bootstrap';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { fetchBalHistory, disconnectAccount } from '../store/actions';
 
 export default function AccountDetails(props) {
   const [balanceRecord, setBalanceRecord] = useState([]);
-  const { account } = props;
+  const [account, setAccount] = useState(null);
+
   const dispatch = useDispatch();
   const balHistory = useSelector((state) => state.balHisState);
+  const noAccount = useSelector((state) => state.noAccountState);
+
+  useEffect(() => {
+    setAccount(props.account);
+  },[props]);
 
   const fetchBalance = async() => {
     await dispatch(fetchBalHistory());
-    console.log(balHistory)
     setBalanceRecord(balHistory);
   }
+
+  const disconnect = async() => {
+    dispatch(disconnectAccount());
+    setAccount(noAccount);
+    setBalanceRecord([]);
+  }
+
   return (
     <Modal {...props} aria-labelledby="contained-modal-title-vcenter" onEntered={fetchBalance}>
       <Modal.Header closeButton>
@@ -34,7 +46,7 @@ export default function AccountDetails(props) {
                     <h5 className='mt-2 text-dark'>Connected with Metamask</h5>
                 </Col>
                 <Col xs={6} md={4}>
-                <Button variant='outline-danger' onClick={disconnectAccount}>Disconnect</Button>
+                <Button variant='outline-danger' onClick={disconnect}>Disconnect</Button>
                 </Col>
             </Row>
         </Container>

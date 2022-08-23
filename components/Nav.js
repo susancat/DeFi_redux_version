@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button, ButtonGroup, Container, Navbar } from 'react-bootstrap';
 import { useDispatch, useSelector } from "react-redux";
 import { grabAccount, grabBalance, postBalHistory } from '../store/actions';
@@ -17,6 +17,7 @@ const Nav = () => {
     await dispatch(grabBalance());
     await dispatch(postBalHistory());
   }
+
     return (
         <>
         <Navbar>

@@ -28,11 +28,11 @@ export const grabAccount = () => async (dispatch) => {
 };
 
 export const disconnectAccount = () => async (dispatch) => {
-  await disconnect();
+  const account = await disconnect();
   try {
     dispatch({
       type: FETCH_ACCOUNT,
-      payload: null,
+      payload: account,
     });
   } catch (err) {
       console.log(err)

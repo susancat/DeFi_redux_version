@@ -2,21 +2,63 @@
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 
-//check if web3 connection but not trigger connection positively
-export const connectionChanges = async() => {
-  //call switchNetwork 
-  //enable accountschange
-  try{
-        window.ethereum.on("accountsChanged", (accounts) => {
-            fetchAccount();
-            fetchBalance();
-            postBalanceHistory(); 
-        });
-    } catch(err){
-        console.log(err)
-    }
+//start a connection to the web3 provider positively
+const getWeb3Modal = async() => {
+  const providerOptions = {
+      //for wallet other than metamask only but required
+  };
+  const web3Modal = new Web3Modal({
+      network: 'rinkeby',
+      cacheProvider: true, // optional
+      providerOptions, // required
+      disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
+  });
+  return web3Modal;
 }
 
+const connectWeb3 = async() => {
+  if(!window.ethereum) throw new Error("No crypto wallet found!");
+  try{
+      const web3Modal = await getWeb3Modal();
+      const provider = await web3Modal.connect();
+      const web3 = new Web3(provider);
+      return web3;
+  } catch(err) {
+      console.log(err);
+  }
+}
+
+// const fetchChainId = async() => {
+//   const web3 = await connectWeb3();
+//   const chainId = await web3.eth.net.getId();
+//   return chainId;
+// }
+
+export const connectAccount = async() => {
+  const web3 = await connectWeb3();
+  try { 
+    const accounts = await web3.eth.getAccounts();
+    const account = web3.utils.toChecksumAddress(accounts[0]);
+    return account;
+  } catch(err) {
+    console.log(err)
+  }
+}
+
+export const connectForBalance = async() => {
+  const web3 = await connectWeb3();
+  const account = await connectAccount();
+  try { 
+    const balInWei = await web3.eth.getBalance(account);
+    const balanceWhole = web3.utils.fromWei(balInWei);
+    const balance = parseFloat(balanceWhole).toFixed(5);
+    return balance;
+  } catch(err) {
+    console.log(err);
+  }
+}
+
+//check if web3 connection but not trigger connection positively
 export const fetchWeb3 = async() => {
   if(!window.ethereum) throw new Error("No crypto wallet found!");
   let provider;
@@ -52,7 +94,20 @@ export const fetchBalance = async() => {
     console.log(err);
   }
 }
+
 //common internal functions in calling order
+export const connectionChanges = async() => {
+  try{
+        window.ethereum.on("accountsChanged", (accounts) => {
+            fetchAccount();
+            fetchBalance();
+            postBalanceHistory(); 
+        });
+    } catch(err){
+        console.log(err)
+    }
+}
+
 export const postBalanceHistory = async() => {
   const web3 = await fetchWeb3();
   const account = await fetchAccount();
@@ -94,7 +149,8 @@ export const switchNetwork = async() => {
           fetchAccount();
           fetchBalance();
           postBalanceHistory();
-          }).catch(err => {
+          })
+        .catch(err => {
             console.log(err);
           }
         );
@@ -125,65 +181,10 @@ export const switchNetwork = async() => {
 export const disconnect = async() => {
   try {
       const web3Modal = await getWeb3Modal();
-      await web3Modal.clearCachedProvider();
-      // window.ethereum.on('disconnect',setAccount(null));              
+      web3Modal.clearCachedProvider();
+      // window.ethereum.on('disconnect',setAccount(null));
+      return null;              
   } catch (err) {
       console.log(err)
-  }
-}
-
-//start a connection to the web3 provider positively
-const getWeb3Modal = async() => {
-  const providerOptions = {
-      //for wallet other than metamask only but required
-  };
-  const web3Modal = new Web3Modal({
-      network: 'rinkeby',
-      cacheProvider: true, // optional
-      providerOptions, // required
-      disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
-  });
-  return web3Modal;
-}
-
-const connectWeb3 = async() => {
-  if(!window.ethereum) throw new Error("No crypto wallet found!");
-  try{
-      const web3Modal = await getWeb3Modal();
-      const provider = await web3Modal.connect();
-      const web3 = new Web3(provider);
-      return web3;
-  } catch(err) {
-      console.log(err);
-  }
-  }
-
-  const fetchChainId = async() => {
-  const web3 = await connectWeb3();
-  const chainId = await web3.eth.net.getId();
-  return chainId;
-}
-
-export const connectAccount = async() => {
-  const web3 = await connectWeb3();
-  try { 
-    const accounts = await web3.eth.getAccounts();
-    const account = web3.utils.toChecksumAddress(accounts[0]);
-    return account;
-  } catch(err) {
-    console.log(err)
-  }
-}
-
-export const connectForBalance = async() => {
-  const web3 = await connectWeb3();
-  const account = await connectAccount();
-  try { 
-    const balInWei = await web3.eth.getBalance(account);
-    const balanceWhole = web3.utils.fromWei(balInWei);
-    const balance = parseFloat(balanceWhole).toFixed(5);
-    return balance;
-  } catch(err) {
-    console.log(err);
   }
 }
