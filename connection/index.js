@@ -22,6 +22,7 @@ const connectWeb3 = async() => {
       const web3Modal = await getWeb3Modal();
       const provider = await web3Modal.connect();
       const web3 = new Web3(provider);
+      await switchNetwork();
       return web3;
   } catch(err) {
       console.log(err);
@@ -68,6 +69,7 @@ export const fetchWeb3 = async() => {
       provider = window.web3.currentProvider;
     } 
     const web3 = new Web3(provider);
+    await switchNetwork();
     return web3;
 }
 
@@ -145,11 +147,11 @@ export const switchNetwork = async() => {
           method: 'wallet_switchEthereumChain',
           params: [{ chainId: Web3.utils.toHex(4) }], // chainId must be in hexadecimal numbers
         })
-        .then (async() => {
-          fetchAccount();
-          fetchBalance();
-          postBalanceHistory();
-          })
+        // .then (async() => {
+        //   fetchAccount();
+        //   fetchBalance();
+        //   postBalanceHistory();
+        //   })
         .catch(err => {
             console.log(err);
           }
