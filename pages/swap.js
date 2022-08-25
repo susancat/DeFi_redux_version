@@ -1,7 +1,7 @@
 import { useDispatch } from "react-redux";
 import { getAccount, getBalance, postBalHistory } from "../store/actions";
 import { useEffect } from "react";
-import Transfer from '../components/Transfer';
+import SwapCard from '../components/SwapCard';
 
 export default function Home() {
   const dispatch = useDispatch();
@@ -15,7 +15,7 @@ export default function Home() {
   }, [dispatch]);
   return (
     <>
-      <Transfer />
+      <SwapCard />
     </>
   );
 }
