@@ -8,10 +8,12 @@ import Popup from "./popup";
 const SwapCard = () => {
     const [tokenInput, setTokenInput] = useState("ETH");
     const [tokenOutput, setTokenOutput] = useState("USDC");
-    const [amount, setAmount] = useState(0);
+    const [amountInput, setAmountInput] = useState(0);
+    const [amountOutput, setAmountOutput] = useState(0);
     const [variant, setVariant] = useState("");
     const [show, setShow] = useState(false);
     const [message, setMessage] = useState("");
+    const [rate, setRate] = useState(0);
 //output amount should be calculated according to a real-time exchange rate
     const dispatch = useDispatch();
     const balance = useSelector((state) => state.balanceState);
@@ -38,7 +40,7 @@ const SwapCard = () => {
                                         type="text" 
                                         placeholder="0.0" 
                                         style={{height: '3rem'}} 
-                                        onChange={event => setAmount(Number(event.target.value))}
+                                        onChange={event => setAmountInput(Number(event.target.value))}
                                         size="lg"
                                         required
                                     />
@@ -63,7 +65,7 @@ const SwapCard = () => {
                                     size="lg"
                                     placeholder="0.0" 
                                     style={{height: '3rem'}} 
-                                    // onChange={event => setAmount(Number(event.target.value))}
+                                    // value={setAmountOutput(Number(amountInput * rate))}
                                     required
                                 />
                             </Col>
@@ -76,7 +78,7 @@ const SwapCard = () => {
                             </Row>       
                         </Form.Group>
                         {
-                        balance ?
+                        amountInput && amountOutput && amountInput <= balance?
                             <Button 
                                 variant="primary" 
                                 size="lg"
