@@ -89,26 +89,26 @@ const SwapCard = () => {
                         </Form.Group>
                         {
                             amountInput !== 0 && amountOutput !== 0 && amountInput <= balance ?
-                            <Row><h6 className="text-dark ms-2">1 USDC = {price} ETH</h6></Row> :
-                            <Row></Row>
-                        }
-                        {
-                        amountInput && amountOutput && amountInput <= balance ?
-                            <Button 
-                                variant="primary" 
-                                size="lg"
-                                className="mb-2" 
-                                style={{width:"100%", borderRadius:'15px'}} 
-                                // onClick={() => transfer()}
-                            >Swap</Button>
-                        :
-                            <Button 
+                            <>
+                                <Row><h6 className="text-dark ms-2">1 USDC = {price} ETH</h6></Row>
+                                <Button 
+                                    variant="primary" 
+                                    size="lg"
+                                    className="mb-2" 
+                                    style={{width:"100%", borderRadius:'15px'}} 
+                                    // onClick={() => transfer()}
+                                >Swap</Button>
+                            </> :
+                            <>
+                                <Row></Row>
+                                <Button 
                                 variant="primary" 
                                 size="lg" 
                                 className="mb-2" 
                                 style={{width:"100%", borderRadius:'15px'}} 
                                 disabled
-                            >Select a token</Button>
+                                >Select a token</Button>
+                            </>
                         }
                     </Form>
                 </Card>
