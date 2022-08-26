@@ -88,27 +88,27 @@ const SwapCard = () => {
                             </Row>       
                         </Form.Group>
                         {
-                            amountInput !== 0 && amountOutput !== 0 && amountInput <= balance ?
-                            <>
-                                <Row><h6 className="text-dark ms-2">1 USDC = {price} ETH</h6></Row>
-                                <Button 
-                                    variant="primary" 
-                                    size="lg"
-                                    className="mb-2" 
-                                    style={{width:"100%", borderRadius:'15px'}} 
-                                    // onClick={() => transfer()}
-                                >Swap</Button>
-                            </> :
-                            <>
-                                <Row></Row>
-                                <Button 
+                            amountInput !== 0 && amountOutput !== 0 ?
+                            <Row><h6 className="text-dark ms-2">1 USDC = {price} ETH</h6></Row> :
+                            <Row></Row>
+                        }
+                        {
+                            amountInput !== 0 && amountOutput !== 0 && amountInput <= balance ?                        
+                            <Button 
                                 variant="primary" 
-                                size="lg" 
+                                size="lg"
                                 className="mb-2" 
                                 style={{width:"100%", borderRadius:'15px'}} 
-                                disabled
-                                >Select a token</Button>
-                            </>
+                                // onClick={() => transfer()}
+                            >Swap</Button>
+                            :
+                            <Button 
+                            variant="primary" 
+                            size="lg" 
+                            className="mb-2" 
+                            style={{width:"100%", borderRadius:'15px'}} 
+                            disabled
+                            >Select a token</Button>
                         }
                     </Form>
                 </Card>
