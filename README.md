@@ -26,4 +26,4 @@ A token transfer tool based on:
 - balance history fetched from mongoDB and displayed when click account address button at Nav
 - switch network (if login with chain other than Rinkeby, will inject a switch network request automatically)
 - future plan: token swap and NFT staking features
-- will use ChainLink to fetch the real-time token exchange rate
+- use ChainLink to feed the real-time token exchange rate

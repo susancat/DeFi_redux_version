@@ -1,8 +1,7 @@
 import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Row, Col, Button, Form, Card } from 'react-bootstrap';
-import { getBalance } from "../store/actions";
-import { fetchWeb3 } from "../connection/index";
+import { getBalance, fetchPrice } from "../store/actions";
 import Popup from "./popup";
 
 const SwapCard = () => {
@@ -13,13 +12,24 @@ const SwapCard = () => {
     const [variant, setVariant] = useState("");
     const [show, setShow] = useState(false);
     const [message, setMessage] = useState("");
-    const [rate, setRate] = useState(0);
+    const [rate, setRate] = useState(1500);
 //output amount should be calculated according to a real-time exchange rate
     const dispatch = useDispatch();
     const balance = useSelector((state) => state.balanceState);
+    const price = useSelector((state) => state.priceState);
     useEffect(() => {
         dispatch(getBalance());
     }, [dispatch]);
+
+    useEffect(() => {
+        dispatch(fetchPrice());
+    },[amountOutput])
+
+    const handleOutputAmount = async(e) => {
+        setAmountInput(Number(e.target.value));
+        setAmountOutput(Number(e.target.value) * rate);
+        //if use setAmountOutput(amountInput * rate), it will change one step behind
+    }
 
     return (
         <>
@@ -38,9 +48,9 @@ const SwapCard = () => {
                                 <Col xs={8}>
                                     <Form.Control 
                                         type="text" 
-                                        placeholder="0.0" 
+                                        placeholder="0" 
                                         style={{height: '3rem'}} 
-                                        onChange={event => setAmountInput(Number(event.target.value))}
+                                        onChange={handleOutputAmount}
                                         size="lg"
                                         required
                                     />
@@ -63,9 +73,9 @@ const SwapCard = () => {
                                 <Form.Control 
                                     type="text" 
                                     size="lg"
-                                    placeholder="0.0" 
                                     style={{height: '3rem'}} 
-                                    // value={setAmountOutput(Number(amountInput * rate))}
+                                    onChange={handleOutputAmount}
+                                    value={amountOutput}
                                     required
                                 />
                             </Col>
@@ -78,7 +88,12 @@ const SwapCard = () => {
                             </Row>       
                         </Form.Group>
                         {
-                        amountInput && amountOutput && amountInput <= balance?
+                            amountInput !== 0 && amountOutput !== 0 && amountInput <= balance ?
+                            <Row><h6 className="text-dark ms-2">1 USDC = {price} ETH</h6></Row> :
+                            <Row></Row>
+                        }
+                        {
+                        amountInput && amountOutput && amountInput <= balance ?
                             <Button 
                                 variant="primary" 
                                 size="lg"

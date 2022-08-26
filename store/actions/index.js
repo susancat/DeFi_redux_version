@@ -1,5 +1,5 @@
-import { FETCH_ACCOUNT, FETCH_BALANCE, FETCH_BALHISTORY} from "./types";
-import { fetchAccount, connectAccount, disconnect, fetchBalance, connectForBalance, postBalanceHistory } from "../../connection/index";
+import { FETCH_ACCOUNT, FETCH_BALANCE, FETCH_PRICE, FETCH_BALHISTORY} from "./types";
+import { fetchAccount, connectAccount, disconnect, fetchBalance, connectForBalance, postBalanceHistory, getPrice } from "../../connection/index";
 import axios from 'axios';
 
 //fetch data here, if fetch from server-side, use axios
@@ -93,6 +93,19 @@ export const fetchBalHistory = () => async (dispatch) => {
     dispatch({
       type: FETCH_BALHISTORY,
       payload: res.data.balances
+    });
+  } catch (err) {
+      console.log(err)
+  }
+};
+
+export const fetchPrice = () => async (dispatch) => {
+  const price = await getPrice();
+  console.log("from actions: ", price)
+  try {
+    dispatch({
+      type: FETCH_PRICE,
+      payload: price
     });
   } catch (err) {
       console.log(err)

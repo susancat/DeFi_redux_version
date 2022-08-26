@@ -1,6 +1,7 @@
 //web3 connection functions
 import Web3 from "web3";
 import Web3Modal from "web3modal";
+import aggregatorV3InterfaceABI from "../aggregatorV3InterfaceABI.json";
 
 //start a connection to the web3 provider positively
 const getWeb3Modal = async() => {
@@ -178,6 +179,16 @@ export const switchNetwork = async() => {
       // if no window.ethereum then MetaMask is not installed
       alert('MetaMask is not installed. Please consider installing it: https://metamask.io/download.html');
     } 
+}
+
+export const getPrice = async() => {
+  const web3 = await fetchWeb3(); 
+  const addr = "0xdCA36F27cbC4E38aE16C4E9f99D39b42337F6dcf"; //USDC/ETH on rinkeby
+  const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, addr);
+  const roundData = await priceFeed.methods.latestRoundData().call()
+  const price = (roundData.answer/10 ** 18).toFixed(8);
+  console.log("Latest Round Data", price)
+  return price;
 }
 
 export const disconnect = async() => {
