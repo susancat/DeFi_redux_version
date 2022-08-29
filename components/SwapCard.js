@@ -12,7 +12,6 @@ const SwapCard = () => {
     const [variant, setVariant] = useState("");
     const [show, setShow] = useState(false);
     const [message, setMessage] = useState("");
-    const [rate, setRate] = useState(1500);
 //output amount should be calculated according to a real-time exchange rate
     const dispatch = useDispatch();
     const balance = useSelector((state) => state.balanceState);
@@ -27,7 +26,7 @@ const SwapCard = () => {
 
     const handleOutputAmount = async(e) => {
         setAmountInput(Number(e.target.value));
-        setAmountOutput(Number(e.target.value) * rate);
+        setAmountOutput(Number(e.target.value) * price);
         //if use setAmountOutput(amountInput * rate), it will change one step behind
     }
 
@@ -89,7 +88,7 @@ const SwapCard = () => {
                         </Form.Group>
                         {
                             amountInput !== 0 && amountOutput !== 0 ?
-                            <Row><h6 className="text-dark ms-2">1 USDC = {price} ETH</h6></Row> :
+                            <Row><h6 className="text-dark ms-2">1 USDC = {(1/price).toFixed(8)} ETH</h6></Row> :
                             <Row></Row>
                         }
                         {

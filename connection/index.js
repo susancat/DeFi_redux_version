@@ -9,7 +9,7 @@ const getWeb3Modal = async() => {
       //for wallet other than metamask only but required
   };
   const web3Modal = new Web3Modal({
-      network: 'rinkeby',
+      network: 'goerli',
       cacheProvider: true, // optional
       providerOptions, // required
       disableInjectedProvider: false, // optional. For MetaMask / Brave / Opera.
@@ -146,7 +146,7 @@ export const switchNetwork = async() => {
       try {
         await window.ethereum.request({
           method: 'wallet_switchEthereumChain',
-          params: [{ chainId: Web3.utils.toHex(4) }], // chainId must be in hexadecimal numbers
+          params: [{ chainId: Web3.utils.toHex(5) }], // chainId must be in hexadecimal numbers
         })
         // .then (async() => {
         //   fetchAccount();
@@ -164,8 +164,8 @@ export const switchNetwork = async() => {
               method: 'wallet_addEthereumChain',
               params: [
                 {
-                  chainId: '4',
-                  rpcUrl: 'https://rinkeby.infura.io/v3/9aa3d95b3bc440fa88ea12eaa4456161',
+                  chainId: '5',
+                  rpcUrl: 'https://goerli.infura.io/v3/',
                 },
               ],
             });
@@ -180,16 +180,19 @@ export const switchNetwork = async() => {
       alert('MetaMask is not installed. Please consider installing it: https://metamask.io/download.html');
     } 
 }
-
+//https://docs.chain.link/docs/ethereum-addresses/
 export const getPrice = async() => {
   const web3 = await fetchWeb3(); 
-  const addr = "0xdCA36F27cbC4E38aE16C4E9f99D39b42337F6dcf"; //USDC/ETH on rinkeby
+  const addr = "0xD4a33860578De61DBAbDc8BFdb98FD742fA7028e"; //ETH/USD on Goerli: very limited contracts for goerli, use this temporarily
   const priceFeed = new web3.eth.Contract(aggregatorV3InterfaceABI, addr);
   const roundData = await priceFeed.methods.latestRoundData().call()
-  const price = (roundData.answer/10 ** 18).toFixed(8);
+  const price = (roundData.answer/10 ** 8).toFixed(8);//notice decimal for each contract, some are 8 and some are 18
   console.log("Latest Round Data", price)
   return price;
 }
+
+//official goerli USDC contract: 0x07865c6E87B9F70255377e024ace6630C1Eaa37F
+//https://www.circle.com/en/usdc/developers
 
 export const disconnect = async() => {
   try {
